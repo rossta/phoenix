@@ -866,11 +866,7 @@ describe("leave", () => {
     assert.equal(channel.state, "closed")
   })
 
-  // TODO - the following tests are skipped until Channel.leave
-  // behavior can be fixed; currently, 'ok' is triggered immediately
-  // within Channel.leave so timeout callbacks are never reached
-  //
-  it.skip("sets state to leaving initially", () => {
+  it("sets state to leaving initially", () => {
     assert.notEqual(channel.state, "leaving")
 
     channel.leave()
@@ -878,7 +874,7 @@ describe("leave", () => {
     assert.equal(channel.state, "leaving")
   })
 
-  it.skip("closes channel on 'timeout'", () => {
+  it("closes channel on 'timeout'", () => {
     channel.leave()
 
     clock.tick(channel.timeout)
@@ -886,7 +882,7 @@ describe("leave", () => {
     assert.equal(channel.state, "closed")
   })
 
-  it.skip("accepts timeout arg", () => {
+  it("accepts timeout arg", () => {
     channel.leave(channel.timeout * 2)
 
     clock.tick(channel.timeout)

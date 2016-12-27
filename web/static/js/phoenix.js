@@ -379,7 +379,6 @@ export class Channel {
   //     channel.leave().receive("ok", () => alert("left!") )
   //
   leave(timeout = this.timeout){
-    this.state = CHANNEL_STATES.leaving
     let onClose = () => {
       this.socket.log("channel", `leave ${this.topic}`)
       this.trigger(CHANNEL_EVENTS.close, "leave", this.joinRef())
@@ -387,8 +386,14 @@ export class Channel {
     let leavePush = new Push(this, CHANNEL_EVENTS.leave, {}, timeout)
     leavePush.receive("ok", () => onClose() )
              .receive("timeout", () => onClose() )
+
+    if(this.canPush()) {
+      this.state = CHANNEL_STATES.leaving
+    } else {
+      leavePush.trigger("ok", {})
+    }
+
     leavePush.send()
-    if(!this.canPush()){ leavePush.trigger("ok", {}) }
 
     return leavePush
   }
